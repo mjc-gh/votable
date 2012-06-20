@@ -1,5 +1,6 @@
 Votable
 =======
+[![Build Status](https://secure.travis-ci.org/mikeycgto/votable.png?branch=master)](http://travis-ci.org/mikeycgto/votable)
 
 ## Overview
 
