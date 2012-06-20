@@ -1,0 +1,3 @@
+Votable.setup do
+  
+end
