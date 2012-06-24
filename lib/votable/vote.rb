@@ -3,7 +3,6 @@ module Votable
     extend ActiveSupport::Concern
 
     included do |base|
-      puts self.inspect
       belongs_to :votable, :polymorphic => true
       belongs_to :voter, :polymorphic => true
 
