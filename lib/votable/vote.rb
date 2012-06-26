@@ -7,9 +7,16 @@ module Votable
       belongs_to :voter, :polymorphic => true
 
       validates :votable_id, :voter_id, :presence => true
-      validates :voter_id, :uniqueness => { :scope => :votable_id }
 
       attr_accessible :value
+    end
+
+    module ClassMethods
+      def votable(options)
+        if options[:unique] || options[:once_per]
+          validates :voter_id, :uniqueness => { :scope => [:votable_id, :votable_type] }
+        end
+      end
     end
   end
 

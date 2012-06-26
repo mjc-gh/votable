@@ -17,7 +17,10 @@ module ActiveRecord
         model_path = File.join('app', 'models', "#{file_path}.rb")
 
         class_path = class_name.to_s.split("::")
-        injected_content = "include Votable::JoinVote"
+        injected_content = <<-CONTENT
+  include Votable::JoinVote
+  votable unique: true
+CONTENT
 
         inject_into_class model_path, class_path.last, injected_content
       end
