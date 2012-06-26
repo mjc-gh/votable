@@ -39,4 +39,17 @@ class VotableModelTest < ActiveSupport::TestCase
 
     assert_equal 1, u.post_votes.size
   end
+
+  test "scopes Votes to id and type" do
+    u = create_user
+
+    p = create_post(id: 1)
+    q = create_question(id: 1)
+
+    u.cast_post_vote(p, 1)
+    u.cast_question_vote(q, 1)
+puts u.post_votes.inspect
+    assert_equal 1, u.post_votes.size
+    assert_equal 1, u.question_votes.size
+  end
 end
