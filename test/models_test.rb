@@ -48,7 +48,7 @@ class VotableModelTest < ActiveSupport::TestCase
 
     u.cast_post_vote(p, 1)
     u.cast_question_vote(q, 1)
-puts u.post_votes.inspect
+
     assert_equal 1, u.post_votes.size
     assert_equal 1, u.question_votes.size
   end
