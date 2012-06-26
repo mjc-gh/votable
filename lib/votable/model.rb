@@ -25,8 +25,10 @@ module Votable
       associations.each do |assoc|
         options.reverse_merge!(Votable.default_options)
 
-        name = assoc.to_s.singularize
         through = options[:through].to_s
+
+        name = assoc.to_s.singularize
+        klass = name.classify
 
         if options[:add_vote_helpers]
           self.class_eval do
@@ -39,8 +41,8 @@ module Votable
           end
         end
 
-        has_many :"#{name}_votes", dependent: :destroy, as: options[:as], :class_name => options[:vote_class]
-        has_many :"#{name}_#{through.pluralize}", through: :"#{name}_votes", source: through, source_type: name.classify, :uniq => true
+        has_many :"#{name}_votes", as: options[:as], :class_name => options[:vote_class], conditions: { votable_type: klass }
+        has_many :"#{name}_#{through.pluralize}", through: :"#{name}_votes", source: through, source_type: klass, :uniq => true
       end
     end
   end
