@@ -11,6 +11,10 @@ class ActiveSupport::TestCase
     Question.create(question_attributes(attrs))
   end
 
+  def create_group(attrs = {})
+    Group.create(group_attributes(attrs))
+  end
+
   protected
 
   def user_attributes(attrs)
@@ -23,5 +27,9 @@ class ActiveSupport::TestCase
 
   def question_attributes(attrs)
     { body: 'Question Body' }.merge! attrs
+  end
+
+  def group_attributes(attrs)
+    { name: 'Group Name' }.merge! attrs
   end
 end

@@ -52,4 +52,26 @@ class VotableModelTest < ActiveSupport::TestCase
     assert_equal 1, u.post_votes.size
     assert_equal 1, u.question_votes.size
   end
+
+  test "Voter can recast Vote" do
+    u = create_user
+    p = create_post
+
+    assert u.cast_post_vote(p, 1)
+    assert_equal 1, u.post_votes.first.value
+
+    assert u.cast_post_vote(p, -1)
+    assert_equal -1, u.post_votes.first.value
+  end
+
+  test "Voter cant recast Vote when disabled" do
+    g = create_group
+    p = create_post
+
+    assert g.cast_post_vote(p, 1)
+    assert_equal 1, g.post_votes.first.value
+
+    assert_equal false, g.cast_post_vote(p, -1)
+    assert_equal 1, g.post_votes.first.value
+  end
 end

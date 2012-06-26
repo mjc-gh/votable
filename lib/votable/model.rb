@@ -32,11 +32,25 @@ module Votable
 
         if options[:add_vote_helpers]
           self.class_eval do
-            define_method :"cast_#{name}_vote" do |model, val, dir = nil|
-              vote = send(:"#{name}_votes").build(value: val)
+            ##
+            # Dynamically add a cast_NAME_vote method to the Voter. This method
+            # will return true\false for whether or not the Vote was created.
+            # If allow_recast is enabled the Voter's initial Vote will updated
+            # to the new value
+            #
+            define_method :"cast_#{name}_vote" do |votable, val|
+              vote = send("#{name}_votes").find_by_votable_id(votable)
 
-              vote.votable = model
-              vote.save
+              if vote
+                # need to return boolean regardless if recast is allowed
+                options[:allow_recast] ? vote.update_attributes(value: val) : false
+
+              else
+                vote = send(:"#{name}_votes").build(value: val)
+                vote.votable = votable
+
+                vote.save
+              end
             end
           end
         end
