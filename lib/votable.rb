@@ -27,10 +27,11 @@ module Votable
 
   mattr_accessor :default_options
   @@default_options = {
-    :vote_class => 'Vote'
+    :vote_class => 'Vote',
+    :allow_recast => true
   }
 
-  %w[ voter_class ].each do |method|
+  @@default_options.keys.each do |method|
     module_eval do
       define_method(method) { |opt| @@default_options[opt] }
     end
