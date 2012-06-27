@@ -55,7 +55,7 @@ module Votable
           end
         end
 
-        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: { votable_type: klass }
+        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: { "#{through}_type" => klass }
         has_many :"#{name}_#{through.pluralize}", through: :"#{name}_votes", source: through, source_type: klass, uniq: true
       end
     end
