@@ -6,8 +6,8 @@ class ORMTest < ActiveSupport::TestCase
 
     model = Class.new(ActiveRecord::Base)
 
-    #assert_includes model.methods, :votable
-    #assert_includes model.methods, :votes_on
+    assert_includes model.methods, :votable_by
+    assert_includes model.methods, :votes_on
   end
 
   #test "includes for Mongoid Document" do
