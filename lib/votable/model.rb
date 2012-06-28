@@ -32,6 +32,7 @@ module Votable
 
         if options[:add_vote_helpers]
           self.class_eval do
+            #include VoterMethods unless included? VoterMethods
             ##
             # Dynamically add a cast_NAME_vote method to the Voter. This method
             # will return true\false for whether or not the Vote was created.
@@ -55,7 +56,22 @@ module Votable
           end
         end
 
-        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: { "#{through}_type" => klass }
+        # setup join relation
+        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: { "#{through}_type" => klass } do
+          def voted_on?(obj, direction = nil)
+            extra = case direction
+            when :up, :positive then "value > 0"
+            when :down, :negative then "value < 0"
+            end
+
+            query = where(votable_id: obj.respond_to?(:id) ? obj.id : obj)
+            query = where(extra) if extra
+
+            query.limit(1).any?
+          end
+        end
+
+        # setup through relationship
         has_many :"#{name}_#{through.pluralize}", through: :"#{name}_votes", source: through, source_type: klass, uniq: true
       end
     end

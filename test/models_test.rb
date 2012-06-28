@@ -76,7 +76,36 @@ class VotableModelTest < ActiveSupport::TestCase
     assert_equal 1, u.question_votes.size
 
     assert_equal p, u.post_votes.first.votable
-    puts u.question_votes.inspect
     assert_equal q, u.question_votes.first.votable
+  end
+
+  test "Voter voted_on? positive value" do
+    u = create_user
+    p = create_post
+
+    u.cast_post_vote(p, 1)
+    u.reload
+
+    assert u.post_votes.voted_on?(p)
+    assert u.post_votes.voted_on?(p, :up)
+    assert u.post_votes.voted_on?(p, :positive)
+
+    assert !u.post_votes.voted_on?(:p, :down)
+    assert !u.post_votes.voted_on?(:p, :negative)
+  end
+
+  test "Voter voted_on? negative value" do
+    u = create_user
+    p = create_post
+
+    u.cast_post_vote(p, -1)
+    u.reload
+
+    assert u.post_votes.voted_on?(p)
+    assert u.post_votes.voted_on?(:p, :down)
+    assert u.post_votes.voted_on?(:p, :negative)
+
+    assert !u.post_votes.voted_on?(p, :up)
+    assert !u.post_votes.voted_on?(p, :positive)
   end
 end
