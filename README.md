@@ -19,17 +19,77 @@ Votable
         # usage: rails generate votable [NAME]
         rails g votable Vote
 
-4. Now define some Voters and Votables:
+## Defining Voters and Votables
 
-        class User
-          votes_on :posts
-        end
+Next, in order to use votable, you need to define one more voter. Voters 
+use the `votes_on` method to define what models they can vote on. 
 
-        class Post
-          votable_by :users
-        end
+For examle:
+
+    class User < ActiveRecord::Base
+      votes_on :posts, :questions
+    end
+
+Models which get voted on, are called votables. These models use the
+`votable_by` method to define what Voters can vote on them.
+
+    class Post < ActiveRecord::Base
+      votable_by :users
+    end
+
+    class Question < ActiveRecord::Base
+      votable_by :users
+    end
+
+Under the hood, the `votes_on` and `votable_by` methods, setup the
+necessary relationships between you models.
+
+In this example, User will now be realted to Vote records under the
+`post_votes` and `question_votes` association. Since the relationship is
+polymorphic, the types will also be included.
+
+_Coming Soon_ Eventually, there will a rich enough API so one can relate
+a given voter and votable model more than once. The key here is naming
+the uniquely association (and generated methods)
 
 
-5. Now Voters can cast votes:
+## Casting Votes
 
-        current_user.cast_post_vote(post_instance, 1)
+Once you've defined Voters and Votables, you can now cast votes. Votable
+automatically generates vote casting methods on the Voter class for
+whatever they can vote on.
+
+Continuing the above example, the following would be available to the
+User class:
+
+     # cast an up Vote on a Post instance
+     current_user.cast_post_vote(post_instance, 1)
+
+     # cast a down Vote on a Question instance
+     current_user.cast_question_vote(question_instance, -1)
+
+Votable gives you complete control over what value of the vote actually
+is.
+
+## Voter Methods
+
+In addition to the generated cast vote method, the following methods are
+also generated under the `_votes` association.
+
+- `voted_on?(object, direction = nil)`
+
+  The `voted_on?` method returns either `true` or `false`. It has
+  one required argument, `object` which should be an instance of a
+  votable model or an ID for the given vote association.
+
+  The method also takes an optional second argument `direction`. This
+  can either: `:up`, `:down`, `:positive`, `:negative` or `nil` (the 
+  default)
+  
+  For example:
+  
+        # check if the current_user voted at all on a given Post
+        current_user.post_votes.voted_on?(post_instance)
+
+        # check if user voted up (positive) on a given Question
+        current_user.question_votes.voted_on?(question_instance, :down)
