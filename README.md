@@ -90,13 +90,10 @@ Now, whenever a Vote is created or updated by a User for a Post, the
 
 **Note:** The attribute name ends with `_total` rather than `_count`. 
 This is done on purpose to avoid clashing with ActiveRecord's own 
-`:counter_cache` options. 
-
-The `:counter_cache` option is designed to track how many Vote 
-instances have been created. Our Vote count cache is designed to 
-keep a running total of vote values. Eventually, Votable will add an
-option to enable the `:counter_cache` in order to track how many votes 
-have been cast altogether for a given Voter and Votable.
+`:counter_cache` options which is designed to track how manu instances
+have been created. Eventually, Votable will add an option to enable 
+the `:counter_cache` in order to track how many votes have been 
+cast altogether for a given Voter and Votable.
 
 _Coming Soon_ An API for customizable counter caches with different
 conditions tied to them (ie. positive and negative values).
