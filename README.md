@@ -90,8 +90,8 @@ Now, whenever a Vote is created or updated by a User for a Post, the
 
 **Note:** The attribute name ends with `_total` rather than `_count`. 
 This is done on purpose to avoid clashing with ActiveRecord's own 
-`:counter_cache` options which is designed to track how manu instances
-have been created. Eventually, Votable will add an option to enable 
+`:counter_cache` option which is designed to count how many instances
+have been created. Votable will eventually add an option to enable 
 the `:counter_cache` in order to track how many votes have been 
 cast altogether for a given Voter and Votable.
 
@@ -135,7 +135,10 @@ requests!
 
 - Add options for allowing multiple votes for a given Voter and Votable.
 
-- Vote value validation.
+- Vote value validation which will likely will exist at the controller 
+  level rather than the model layer. Maintaining flexibility is key (ie. 
+  some votes for a given Voter and Votable may require totally 
+  different values than another Voter\Votable pair).
 
 - Voter reputations. Support decreasing reputation on down\negative
   votes.
