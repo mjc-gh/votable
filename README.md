@@ -72,16 +72,16 @@ the User class:
 Votable gives you complete control over what value of the vote actually
 is. This provides a lot of flexibile 
 
-## Vote Count Cache
+## Vote Total Caches
 
-Votable will automatically store a running total if the correct
-attributes are defined. Vote counter caches should exist under the
-Votable class. Thus, step one in adding a counter cache is to create
-a migration for it. 
+Votable will automatically store a running total of the Vote valye if
+the correct attributes are defined. Vote counter caches should exist 
+under the Votable class. 
 
-The name of the counter cache column should match whatever Voter type
-you are keeping count of. For example, suppose you wanted to create a
-counter cache for User votes on Posts:
+Step one in adding a counter cache is to create a migration for it. The
+name of the counter cache column should match whatever Voter type you
+are keeping count of. For example, suppose you wanted to create a total
+value cache for User votes on Posts:
 
     rails g migration AddVotableCacheToPosts user_votes_total:integer
 
