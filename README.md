@@ -23,9 +23,10 @@ Highly customizable Voting system for Rails.
 
 ## Defining Voters and Votables
 
-Next, in order to use votable, you need to define one more voter. Voters
-use the `votes_on` method to define what models they can vote on. For
-example:
+Next, in order to use votable, you need to define one or more voter. Voters
+use the `votes_on` method to define what models they can vote on. The
+`votes_on` method also accepts local overrides for any of Votables options 
+(ie. `:default_vote_class` and `:allow_recast`). Here is an example:
 
     class User < ActiveRecord::Base
       votes_on :posts, :questions
@@ -42,17 +43,16 @@ Models which get voted on, are called Votables. These models use the
       votable_by :users
     end
 
-Under the hood, the `votes_on` and `votable_by` methods, setup the
-necessary relationships between you models.
+Under the hood, the `votes_on` and `votable_by` methods setup the
+necessary relationships and associations between your models.
 
-In this example, User will now be realted to Vote records under the
+In this example, User will now be related to Vote records under the
 `post_votes` and `question_votes` association. Since the relationship is
-polymorphic, the types will also be included.
+polymorphic, the class types will also be included.
 
 _Coming Soon_ Eventually, there will a rich enough API so one can relate
 a given voter and votable model more than once. The key here is naming
 the uniquely association (and generated methods)
-
 
 ## Casting Votes
 
