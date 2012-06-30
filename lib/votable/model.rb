@@ -23,7 +23,9 @@ module Votable
 
     def create_votable_associations(associations, options)
       associations.each do |assoc|
-        options.reverse_merge!(Votable.default_options)
+        options.reverse_merge!({
+          vote_class: Votable.default_vote_class, allow_recast: Votable.allow_recast
+        })
 
         through = options[:through].to_s
 
@@ -43,6 +45,8 @@ module Votable
               vote = send("#{name}_votes").find_by_votable_id(votable)
 
               if vote
+                #unless options[:allow_recast]
+                #if vote.value != val
                 # need to return boolean regardless if recast is allowed
                 options[:allow_recast] ? vote.update_attributes(value: val) : false
 

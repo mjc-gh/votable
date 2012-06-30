@@ -9,6 +9,17 @@ module Votable
       validates :votable_id, :voter_id, :presence => true
 
       attr_accessible :value
+
+      after_save do
+        if value_changed?
+          votable_klass = votable_type.constantize
+          voter_cache = :"#{voter_type.downcase}_votes_total"
+
+          if votable_klass.attribute_method? voter_cache
+            votable_klass.update_counters votable_id, voter_cache => value
+          end
+        end
+      end
     end
 
     module ClassMethods
