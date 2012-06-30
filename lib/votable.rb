@@ -21,19 +21,14 @@ module Votable
 
   end
 
+  # TODO update default settings
   def self.setup
     yield self
   end
 
-  mattr_accessor :default_options
-  @@default_options = {
-    :vote_class => 'Vote',
-    :allow_recast => true
-  }
+  mattr_accessor :default_vote_class
+  @@default_vote_class = 'Vote'
 
-  @@default_options.keys.each do |method|
-    module_eval do
-      define_method(method) { |opt| @@default_options[opt] }
-    end
-  end
+  mattr_accessor :allow_recast
+  @@allow_recast = true
 end
