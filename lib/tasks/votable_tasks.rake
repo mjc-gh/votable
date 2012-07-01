@@ -11,7 +11,7 @@ namespace :votable do
           if votable_klass.attribute_method? attribute
             votable = votable_klass.find_by_id(fields.first)
 
-            votable.update_attribute(attribute, sum)
+            votable.update_attribute(attribute, sum) if votable
           end
         end
       end
