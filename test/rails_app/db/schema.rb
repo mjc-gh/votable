@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20120630023215) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "user_votes_count"
+    t.integer  "user_votes_total"
   end
 
   create_table "questions", :force => true do |t|

@@ -1,33 +1,38 @@
 require 'test_helper'
 
 class VotableCounterCacheTest < ActiveSupport::TestCase
-  test "increases counter cache on Vote" do
+  test "increases total cache on Vote" do
     u = create_user
     p = create_post
 
-    u.cast_question_vote(p, 1)
+    u.cast_post_vote(p, 1)
     p.reload
 
     assert_equal 1, p.user_votes_total
   end
-  
-  test "decreases counter cache on Vote" do
+
+  test "decreases total cache on Vote" do
     u = create_user
     p = create_post
 
-    u.cast_question_vote(p, -1)
+    u.cast_post_vote(p, -1)
     p.reload
 
     assert_equal -1, p.user_votes_total
   end
 
-  test "counter cache handles arbitrary values on Vote" do
+  test "total cache handles recasts" do
     u = create_user
     p = create_post
 
-    u.cast_question_vote(p, 13)
+    u.cast_post_vote(p,5)
     p.reload
 
-    assert_equal 13, p.user_votes_total
+    assert_equal 5, p.user_votes_total
+
+    u.cast_post_vote(p, -2)
+    p.reload
+
+    assert_equal -2, p.user_votes_total
   end
 end

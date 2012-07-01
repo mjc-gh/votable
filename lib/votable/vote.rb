@@ -16,6 +16,10 @@ module Votable
           voter_cache = :"#{voter_type.downcase}_votes_total"
 
           if votable_klass.attribute_method? voter_cache
+            if value_was
+              votable_klass.update_counters votable_id, voter_cache => -1 * value_was
+            end
+
             votable_klass.update_counters votable_id, voter_cache => value
           end
         end
