@@ -9,7 +9,7 @@ namespace :votable do
           votable_klass = fields.last.constantize
 
           if votable_klass.attribute_method? attribute
-            votable = votable_klass.find(fields.first)
+            votable = votable_klass.find_by_id(fields.first)
 
             votable.update_attribute(attribute, sum)
           end
