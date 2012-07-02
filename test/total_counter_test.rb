@@ -25,7 +25,7 @@ class VotableCounterCacheTest < ActiveSupport::TestCase
     u = create_user
     p = create_post
 
-    u.cast_post_vote(p,5)
+    u.cast_post_vote(p, 5)
     p.reload
 
     assert_equal 5, p.user_votes_total
@@ -34,5 +34,19 @@ class VotableCounterCacheTest < ActiveSupport::TestCase
     p.reload
 
     assert_equal -2, p.user_votes_total
+  end
+
+  test "total cache with multiple Voters" do
+    p = create_post
+
+    3.times { create_user.cast_post_vote(p, 1) }
+    p.reload
+
+    assert_equal 3, p.user_votes_total
+
+    create_user.cast_post_vote(p, -1)
+    p.reload
+
+    assert_equal 2, p.user_votes_total
   end
 end
