@@ -6,7 +6,7 @@ module Votable
       belongs_to :votable, :polymorphic => true
       belongs_to :voter, :polymorphic => true
 
-      validates :votable_id, :voter_id, :presence => true
+      validates :votable_id, :voter_id, :votable_type, :voter_type, :presence => true
 
       attr_accessible :value
 
