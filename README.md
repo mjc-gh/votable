@@ -88,6 +88,10 @@ value cache for User votes on Posts:
 Now, whenever a Vote is created or updated by a User for a Post, the
 `user_votes_count` cache will be updated accordingly.
 
+It's recommend that you also add `:default => 0` to your migration in
+order to ensure sorting and ordering works as expected for this
+attribute.
+
 **Note:** The attribute name ends with `_total` rather than `_count`. 
 This is done on purpose to avoid clashing with ActiveRecord's own 
 `:counter_cache` option which is designed to count how many instances
@@ -130,15 +134,18 @@ requests!
   running vote total. Can likely just leverage the existing
   `:counter_cache` options in ActiveRecord.
 
-- Conditional counter caches to allow for custom countes with
+- Conditional counter caches to allow for custom counts with
   arbitrary logic tied to it (ie. positive and negative counts).
 
 - Add options for allowing multiple votes for a given Voter and Votable.
 
-- Vote value validation which will likely will exist at the controller 
+- Vote value validation which will likely exist at the controller 
   level rather than the model layer. Maintaining flexibility is key (ie. 
   some votes for a given Voter and Votable may require totally 
   different values than another Voter\Votable pair).
 
 - Voter reputations. Support decreasing reputation on down\negative
   votes.
+
+- Options and support to destroy Votes. Presently, deleting a vote will
+  throw off the total count caches.
