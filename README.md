@@ -74,7 +74,7 @@ is. This provides a lot of flexibile
 
 ## Vote Total Caches
 
-Votable will automatically store a running total of the Vote valye if
+Votable will automatically store a running total of Vote values if
 the correct attributes are defined. Vote counter caches should exist 
 under the Votable class. 
 
