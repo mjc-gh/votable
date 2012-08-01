@@ -11,7 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120630023215) do
+ActiveRecord::Schema.define(:version => 20120712042131) do
+
+  create_table "comments", :force => true do |t|
+    t.string   "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "feedbacks", :force => true do |t|
+    t.integer "voter_id"
+    t.integer "votable_id"
+    t.string  "votable_type"
+    t.string  "voter_type"
+    t.string  "scope"
+    t.integer "value"
+  end
+
+  add_index "feedbacks", ["votable_id"], :name => "index_feedbacks_on_votable_id"
+  add_index "feedbacks", ["voter_id"], :name => "index_feedbacks_on_voter_id"
 
   create_table "groups", :force => true do |t|
     t.string   "name"
@@ -23,7 +41,6 @@ ActiveRecord::Schema.define(:version => 20120630023215) do
     t.string   "title"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-    t.integer  "user_votes_count"
     t.integer  "user_votes_total"
   end
 
