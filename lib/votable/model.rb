@@ -45,8 +45,6 @@ module Votable
             # to the new value
             #
             define_method :"cast_#{name}_vote" do |votable, val|
-              #query = { votable_id: votable }
-              #query[:scope] = name if scoped
               query = vote_conditions.merge({ votable_id: votable })
               vote = send("#{name}_votes").where(query).first
 
