@@ -7,7 +7,10 @@ class VotableCreate<%= table_name.camelize %> < ActiveRecord::Migration
       t.string :votable_type
       t.string :voter_type
 
-      #t.string :direction
+      <% if options[:add_scope] %>
+        t.string :scope
+      <% end %>
+
       t.integer :value
     end
 

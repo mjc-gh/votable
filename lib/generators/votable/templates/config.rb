@@ -6,7 +6,7 @@ Votable.setup do |config|
   # Refer to the README (and tests!) for more details.
 
   # set default Vote class
-  # config.vote_class = 'Vote'
+  # config.default_vote_class = 'Vote'
   #
   # allow Voters to recast votes (or not)
   # config.allow_recast = true

@@ -24,6 +24,13 @@ CONTENT
 
         inject_into_class model_path, class_path.last, injected_content
       end
+
+      protected
+
+      def add_options!(opts)
+        opts.on('-s', '--add-scope',
+                'Use this option if you need more than one associations between a given pair of Voter and Votable') { |v| options[:add_scope] = v }
+      end
     end
   end
 end
