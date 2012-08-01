@@ -1,18 +1,10 @@
 class ActiveSupport::TestCase
-  def create_user(attrs = {})
-    User.create(user_attributes(attrs))
-  end
-
-  def create_post(attrs = {})
-    Post.create(post_attributes(attrs))
-  end
-
-  def create_question(attrs = {})
-    Question.create(question_attributes(attrs))
-  end
-
-  def create_group(attrs = {})
-    Group.create(group_attributes(attrs))
+  %w[ user post question group comment ].each do |type|
+    class_eval <<-RUBY
+      def create_#{type}(attrs = {})
+        #{type.classify}.create(#{type}_attributes(attrs))
+      end
+    RUBY
   end
 
   protected
@@ -31,5 +23,9 @@ class ActiveSupport::TestCase
 
   def group_attributes(attrs)
     { name: 'Group Name' }.merge! attrs
+  end
+
+  def comment_attributes(attrs)
+    { body: 'Comment Body' }.merge! attrs
   end
 end
