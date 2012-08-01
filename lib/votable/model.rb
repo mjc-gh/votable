@@ -27,14 +27,17 @@ module Votable
           vote_class: Votable.default_vote_class, allow_recast: Votable.allow_recast
         })
 
+        name = assoc.to_s.downcase.singularize
         through = options[:through].to_s
 
-        name = assoc.to_s.singularize
-        klass = name.classify
+        klass = options[:votable_class] ? options[:votable_class] : name.classify
+        scoped = klass.downcase != name
+
+        vote_conditions = { "#{through}_type" => klass }
+        vote_conditions[:scope] = name if scoped
 
         if options[:add_vote_helpers]
           self.class_eval do
-            #include VoterMethods unless included? VoterMethods
             ##
             # Dynamically add a cast_NAME_vote method to the Voter. This method
             # will return true\false for whether or not the Vote was created.
@@ -42,17 +45,20 @@ module Votable
             # to the new value
             #
             define_method :"cast_#{name}_vote" do |votable, val|
-              vote = send("#{name}_votes").find_by_votable_id(votable)
+              #query = { votable_id: votable }
+              #query[:scope] = name if scoped
+              query = vote_conditions.merge({ votable_id: votable })
+              vote = send("#{name}_votes").where(query).first
 
               if vote
-                #unless options[:allow_recast]
-                #if vote.value != val
                 # need to return boolean regardless if recast is allowed
                 options[:allow_recast] ? vote.update_attributes(value: val) : false
 
               else
                 vote = send(:"#{name}_votes").build(value: val)
-                vote.votable = votable
+
+                vote.votable_type = votable.class.model_name unless vote.votable_type
+                vote.votable_id = votable.id
 
                 vote.save
               end
@@ -61,7 +67,7 @@ module Votable
         end
 
         # setup join relation
-        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: { "#{through}_type" => klass } do
+        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: vote_conditions do
           def voted_on?(obj, direction = nil)
             extra = case direction
             when :up, :positive then "value > 0"

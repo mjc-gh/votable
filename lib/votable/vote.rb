@@ -29,7 +29,10 @@ module Votable
     module ClassMethods
       def votable(options)
         if options[:unique] || options[:once_per]
-          validates :voter_id, :uniqueness => { :scope => [:votable_id, :votable_type] }
+          scope = [ :votable_id, :votable_type ]
+          scope << :scope if self.attribute_method?(:scope)
+
+          validates :voter_id, :uniqueness => { :scope => scope }
         end
       end
     end
