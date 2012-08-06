@@ -1,3 +1,5 @@
+require 'test_helper'
+
 class VotableRecastTest < ActiveSupport::TestCase
   test "User voter can recast Vote" do
     u = create_user
