@@ -14,7 +14,7 @@ module Votable
     # as a User or Group type model.
     def votes_on(*args)
       options = args.extract_options!
-      options.reverse_merge!(through: :votable, as: :voter, add_vote_helpers: true)
+      options.reverse_merge!(through: :votable, as: :voter, is_voter: true)
 
       create_votable_associations(args, options)
     end
@@ -22,6 +22,8 @@ module Votable
     private
 
     def create_votable_associations(associations, options)
+      is_voter = !!options.delete(:is_voter)
+
       associations.each do |assoc|
         options.reverse_merge!({
           vote_class: Votable.default_vote_class, allow_recast: Votable.allow_recast
@@ -36,7 +38,7 @@ module Votable
         vote_conditions = { "#{through}_type" => klass }
         vote_conditions[:scope] = name if scoped
 
-        if options[:add_vote_helpers]
+        if is_voter
           self.class_eval do
             ##
             # Dynamically add a cast_NAME_vote method to the Voter. This method
@@ -64,8 +66,14 @@ module Votable
           end
         end
 
-        # setup join relation
-        has_many :"#{name}_votes", as: options[:as], class_name: options[:vote_class], conditions: vote_conditions do
+        # setup join relation (to "votes")
+        votes_opts = { as: options[:as], class_name: options[:vote_class], conditions: vote_conditions }
+        votes_opts[:dependent] = options[:dependent] if is_voter && options.has_key?(:dependent)
+
+        has_many :"#{name}_votes", votes_opts do
+          ##
+          # Define voted_on? method for Voter under NAME_votes association.
+          # This method returns true or false; it also accepts an optional direction argument
           def voted_on?(obj, direction = nil)
             extra = case direction
             when :up, :positive then "value > 0"
