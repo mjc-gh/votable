@@ -1,4 +1,5 @@
 # Configure Rails Environment
+VOTABLE_ORM = (ENV['VOTABLE_ORM'] || :active_record).to_sym
 ENV["RAILS_ENV"] = "test"
 
 require File.expand_path("../rails_app/config/environment.rb",  __FILE__)
@@ -14,8 +15,6 @@ if ActiveSupport::TestCase.method_defined?(:fixture_path=)
   ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 end
 
-# TODO handle testing of different ORMs
-require 'orm/active_record'
 
 # for testing generators
 require "rails/generators/test_case"

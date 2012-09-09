@@ -1,9 +1,11 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
-
-Bundler.require
-require "votable"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "active_resource/railtie"
+require "rails/test_unit/railtie"
+# manually require ORM railtie
+require "#{VOTABLE_ORM}/railtie"
 
 module Dummy
   class Application < Rails::Application
@@ -54,3 +56,12 @@ module Dummy
   end
 end
 
+Bundler.require :default, VOTABLE_ORM
+
+begin
+  # test db must be migrated for Vote introspection (if ORM needs it)
+  require "orm/#{VOTABLE_ORM}"
+rescue LoadError
+end
+
+require "votable"

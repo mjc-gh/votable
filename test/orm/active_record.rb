@@ -1,9 +1,6 @@
-ActiveRecord::Migration.verbose = false
 ActiveRecord::Base.logger = Logger.new(nil)
-ActiveRecord::Migrator.migrate(File.expand_path("../../rails_app/db/migrate/", __FILE__))
+ActiveRecord::Migration.verbose = false
 
-class ActiveSupport::TestCase
-  self.use_transactional_fixtures = true
-  self.use_instantiated_fixtures  = false
-end
+ActiveRecord::Base.establish_connection(Rails.application.config.database_configuration[ENV['RAILS_ENV']])
+ActiveRecord::Migrator.migrate(File.expand_path("../../rails_app/db/migrate/", __FILE__))
 
