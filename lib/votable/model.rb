@@ -38,6 +38,8 @@ module Votable
         vote_conditions = { "#{through}_type" => klass }
         vote_conditions[:scope] = name if scoped
 
+        votes_opts = { as: options[:as], class_name: options[:vote_class], conditions: vote_conditions }
+
         if is_voter
           self.class_eval do
             ##
@@ -64,12 +66,11 @@ module Votable
               end
             end
           end
+
+          votes_opts[:dependent] = options[:dependent] if options.has_key?(:dependent)
         end
 
         # setup join relation (to "votes")
-        votes_opts = { as: options[:as], class_name: options[:vote_class], conditions: vote_conditions }
-        votes_opts[:dependent] = options[:dependent] if is_voter && options.has_key?(:dependent)
-
         has_many :"#{name}_votes", votes_opts do
           ##
           # Define voted_on? method for Voter under NAME_votes association.
